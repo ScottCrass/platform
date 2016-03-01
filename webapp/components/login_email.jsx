@@ -28,6 +28,10 @@ var holders = defineMessages({
     pwd: {
         id: 'login_email.pwd',
         defaultMessage: 'Password'
+    },
+    mfa: {
+        id: 'login_email.mfa',
+        defaultMessage: 'MFA Token'
     }
 });
 
@@ -69,10 +73,12 @@ class LoginEmail extends React.Component {
             return;
         }
 
+        const token = this.refs.token.value.trim();
+
         state.serverError = '';
         this.setState(state);
 
-        Client.loginByEmail(name, email, password,
+        Client.loginByEmail(name, email, password, token,
             () => {
                 UserStore.setLastEmail(email);
                 browserHistory.push('/' + name + '/channels/town-square');
@@ -138,6 +144,17 @@ class LoginEmail extends React.Component {
                             ref='password'
                             placeholder={formatMessage(holders.pwd)}
                             spellCheck='false'
+                        />
+                    </div>
+                    <div className={'form-group' + errorClass}>
+                        <input
+                            type='text'
+                            className='form-control'
+                            name='token'
+                            ref='token'
+                            placeholder={formatMessage(holders.mfa)}
+                            spellCheck='false'
+                            autoComplete='off'
                         />
                     </div>
                     <div className='form-group'>

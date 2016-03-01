@@ -303,13 +303,13 @@ export function logout(success, error) {
     });
 }
 
-export function loginByEmail(name, email, password, success, error) {
+export function loginByEmail(name, email, password, token, success, error) {
     $.ajax({
         url: '/api/v1/users/login',
         dataType: 'json',
         contentType: 'application/json',
         type: 'POST',
-        data: JSON.stringify({name, email, password}),
+        data: JSON.stringify({name, email, password, token}),
         success: function onSuccess(data, textStatus, xhr) {
             track('api', 'api_users_login_success', data.team_id, 'email', data.email);
             sessionStorage.removeItem(data.id + '_last_error');
@@ -1675,6 +1675,21 @@ export function resendVerification(success, error, teamName, email) {
             if (error) {
                 error(e);
             }
+        }
+    });
+}
+
+export function updateMfa(data, success, error) {
+    $.ajax({
+        url: '/api/v1/users/update_mfa',
+        dataType: 'json',
+        contentType: 'application/json',
+        type: 'POST',
+        data: JSON.stringify(data),
+        success,
+        error: (xhr, status, err) => {
+            var e = handleError('updateMfa', xhr, status, err);
+            error(e);
         }
     });
 }
